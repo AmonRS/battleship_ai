@@ -31,7 +31,8 @@ ships = [2,3,3,4,5]
 # probability density function / heatmap
     # https://cliambrown.com/battleship/methodology.php#options
 
-# 
+# deep reinforcement learning
+    # https://www.efavdb.com/battleship
 
 
 
