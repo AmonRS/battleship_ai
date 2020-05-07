@@ -1,20 +1,82 @@
 # battleship ai
 
-board = []
+import copy
+import pprint
+import random
 
-ships = [2,3,3,4,5]
+import random_algo
 
 
 
-# for several times:
-    # randomly place the ships on the board
-    # run an algorithm to solve it
-    # get results (number to moves to win)
+ships = [
+    ['destroyer',2],
+    ['submarine',3],
+    ['cruiser',3],
+    ['battleship',4],
+    ['carrier',5]
+]
 
-# OR
+def get_board(type='empty', size=10):
+    board = []
+    for i in range(size):
+        board.append( [0]*size )
 
-# tournament style
-    # ...
+    if type == 'empty':
+        return board
+    elif type == 'random_ships':
+        # place ships randomly
+        return board
+
+
+
+
+
+
+
+
+
+def play_solo(algo='random', no_of_plays=1):
+    board = get_board('random_ships')
+
+
+
+
+
+
+
+
+
+
+
+
+
+type_of_game = 'solo'
+
+if type_of_game == 'solo':
+    play_solo()
+    # for several times:
+        # randomly place the ships on the board
+        # run an algorithm to solve it
+        # get results (number to moves to win)
+elif type_of_game == 'tournament':
+    pass
+    # tournament style
+        # ...
+elif type_of_game == 'player':
+    pass
+    # player vs. ai
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
