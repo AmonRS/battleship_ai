@@ -74,7 +74,7 @@ def display_board(board):
 # GAME
 
 def check_if_won(board):
-    # check if all the ships have been killed x_x @todo
+    # check if all the ships have been killed x_x
     size = len(board)
     for i in range(size):
         for j in range(size):
