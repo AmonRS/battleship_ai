@@ -7,7 +7,7 @@ hit_positions = []
 def make_move(board):
     size = len(board)
     # make random move if the stack is empty
-    if(hit_positions.empty()):
+    if not hit_positions:
         while True:
             x = random.randint(0, size - 1)
             y = random.randint(0, size - 1)
