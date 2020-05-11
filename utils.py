@@ -9,8 +9,8 @@ import random
 # SHIPS
 
 ships = [
-    [1, 'destroyer', 2],           # [ no. , name , size]
-    [2, 'submarine', 3], 
+    [1, 'destroyer', 2],            # [ no. , name , size]
+    [2, 'submarine', 3],            # no. is used to identify ships on the board 
     [3, 'cruiser', 3], 
     [4, 'battleship', 4], 
     [5, 'carrier', 5]
@@ -40,7 +40,7 @@ def place_ship(board, ship):
     # place ship randomly onto the board
     size = len(board)
     while True:
-        # align = random.choice('ver', 'hor') @todo              # right now the ships are only place horizontally
+        # align = random.choice('ver', 'hor') @todo              # right now the ships are only placed horizontally
         x = random.randint(0, size-1)
         y = random.randint(0, size-1)
 
@@ -65,7 +65,8 @@ def display_board(board):
 # board:
 #   ~ = water/ocean
 #   1-5 = one of the ships
-#   X = hit
+#   X = ship got hit
+#   0 = hit water
 
 
 

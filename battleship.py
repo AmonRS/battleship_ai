@@ -1,8 +1,8 @@
 # battleship ai
 
-import copy
 import pprint
 import random
+import statistics
 
 import utils
 import random_algo
@@ -14,28 +14,44 @@ import deep_reinforcement
 
 
 
+def play_solo(no_of_plays=1):
+    
+    random_moves = []
+    hunt_moves = []
+    prob_moves = []
+    deep_moves = []
+
+    for i in range(no_of_plays):
+
+        baord = utils.get_board('random_ships')
+
+        random_moves.append( random_algo.play(baord) )
+        hunt_moves.append( hunt_algo.play(baord) )
+        # prob
+        # deep r
+
+    print ('average moves for each algo to win: ')
+    print('random: ', statistics.mean(random_moves))
+    print('hunt: ', statistics.mean(hunt_moves))
+    # print('prob: ', statistics.mean(prob_moves))
+    # print('deep: ', statistics.mean(deep_moves))
+    
 
 
-def play_solo(algo='random', no_of_plays=1):
-    board = utils.get_board('random_ships')
 
 
-
-
-
-def play():
-    type_of_game = 'solo'
+def play(type_of_game='solo', num_of_games_each=1):
 
     if type_of_game == 'solo':
-        play_solo()
-        # for several times:
-            # randomly place the ships on the board
-            # run an algorithm to solve it
-            # get results (number to moves to win)
+        play_solo(no_of_plays=num_of_games_each)
+
+
+
     elif type_of_game == 'tournament':
         pass
         # tournament style
             # ...
+
     elif type_of_game == 'player':
         pass
         # player vs. ai
@@ -59,7 +75,6 @@ def test_play():
 
 def main():
     test_play()
-    # utils.display_board(utils.get_board(type='random_ships'))
 
 if __name__ == '__main__':
     main()
