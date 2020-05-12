@@ -5,7 +5,11 @@ hit_positions = []
 
 
 def make_move(board):
+    print("make move ()")
+    print('hit_positions: ', hit_positions)
+
     size = len(board)
+
     # make random move if the stack is empty
     if not hit_positions:
         while True:
@@ -23,6 +27,7 @@ def make_move(board):
                 board[x][y] = 'X'
                 hit_positions.append([x,y])
                 break
+
     else:
         guess_along_hit(board)
 
@@ -31,6 +36,7 @@ def guess_along_hit(board):
     x = hit_positions[-1][0]
     y = hit_positions[-1][1]
     print(x, y)
+
 
     # also check if the coordinates are valid
     if(check_valid_coordinates(board,x,y-1) and board[x][y-1]!='X'):
@@ -69,10 +75,12 @@ def guess_along_hit(board):
         
     
 
+
 def check_valid_coordinates(board,x,y):
     if(x >= 0 and x < len(board) and y >= 0 and y < len(board)):
         return True
     return False
+
 
 def check_if_hit(board, x, y):
     if board[x][y] in ['1', '2', '3', '4', '5']:
@@ -80,18 +88,22 @@ def check_if_hit(board, x, y):
     return False
 
 
-# copied this code from the file "random_algo.py"
+
+
+
+
 def play(board):
     moves = 0
 
     while True:
         make_move(board)
         moves += 1
+        print('moves: ',moves)
         # utils.display_board(board)
 
         if utils.check_if_won(board):
             break
 
-    # print('random play done')
+    # print('hunt play done')
     utils.display_board(board)
     return moves
