@@ -21,7 +21,6 @@ def make_random_move(board):
 
 def play(board):
     # print('starting random play')
-
     moves = 0
 
     while True:

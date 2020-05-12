@@ -46,7 +46,7 @@ def play():
 def test_play():
     print('starting test play...')
     board = utils.get_board(type='random_ships', size=10)
-    m = random_algo.play(board)
+    m = hunt_algo.play(board)
     print("moves: ", m)
 
 
@@ -60,6 +60,7 @@ def test_play():
 def main():
     test_play()
     # utils.display_board(utils.get_board(type='random_ships'))
+
 
 if __name__ == '__main__':
     main()
