@@ -28,27 +28,34 @@ def make_move(board):
 
 
 def guess_along_hit(board):
+    x1 = hit_positions[-1][0]
+    y1 = hit_positions[-1][1]
+
     # start from top and move counterclockwise
     # also check if the coordinates are valid
-    if(check_valid_coordinates(x,y-1) & board[x][y-1]!='X'):
+    if(check_valid_coordinates(board,x,y-1) & board[x][y-1]!='X'):
+        print('move after hit: ', x,y-1,' -----------', board[x][y-1])
         board[x][y-1] = 'X'
         if(check_if_hit(board, x, y-1)):
             hit_position.append([x, y-1])
         return
 
-    if(check_valid_coordinates(x-1,y) & board[x-1][y]!='X'):
+    if(check_valid_coordinates(board,x-1,y) & board[x-1][y]!='X'):
+        print('move after hit: ', x-1,y,' -----------', board[x-1][y])
         board[x-1][y] = 'X'
         if(check_if_hit(board, x-1, y)):
             hit_position.append([x-1, y])
         return
 
-    if(check_valid_coordinates(x,y+1) & board[x][y+1]!='X'):
+    if(check_valid_coordinates(board,x,y+1) & board[x][y+1]!='X'):
+        print('move after hit: ', x,y+1,' -----------', board[x][y+1])
         board[x][y+1] = 'X'
         if(check_if_hit(board, x, y+1)):
             hit_position.append([x, y+1])
         return
 
-    if(check_valid_coordinates(x+1,y) & board[x+1][y]!='X'):
+    if(check_valid_coordinates(board,x+1,y) & board[x+1][y]!='X'):
+        print('move after hit: ', x+1,y,' -----------', board[x+1][y])
         board[x+1][y] = 'X'
         if(check_if_hit(board, x+1, y)):
             hit_position.append([x+1, y])
