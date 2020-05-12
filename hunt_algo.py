@@ -18,7 +18,7 @@ def make_move(board):
 
             if board[x][y] in ['~']:
                 print('random move: ', x, y, '-----', board[x][y])
-                board[x][y] = '0'
+                board[x][y] = 'X'
                 # dont change the hit flag even if the guessed position is not a ship
                 break
                 
@@ -42,33 +42,37 @@ def guess_along_hit(board):
 
     # start from top and move counterclockwise
     # also check if the coordinates are valid
-    if(check_valid_coordinates(board,x,y-1) and board[x][y-1]!='X'):
-        print('move after hit: ', x,y-1,' -----------', board[x][y-1])
-        board[x][y-1] = 'X'
-        if(check_if_hit(board, x, y-1)):
-            hit_positions.append([x, y-1])
-        return
+    if check_valid_coordinates(board,x,y-1):
+        if board[x][y-1]!='X':
+            print('move after hit: ', x,y-1,' -----------', board[x][y-1])
+            board[x][y-1] = 'X'
+            if(check_if_hit(board, x, y-1)):
+                hit_positions.append([x, y-1])
+            return
 
-    if(check_valid_coordinates(board,x-1,y) and board[x-1][y]!='X'):
-        print('move after hit: ', x-1,y,' -----------', board[x-1][y])
-        board[x-1][y] = 'X'
-        if(check_if_hit(board, x-1, y)):
-            hit_positions.append([x-1, y])
-        return
+    if check_valid_coordinates(board,x-1,y):
+        if board[x-1][y]!='X':
+            print('move after hit: ', x-1,y,' -----------', board[x-1][y])
+            board[x-1][y] = 'X'
+            if(check_if_hit(board, x-1, y)):
+                hit_positions.append([x-1, y])
+            return
 
-    if(check_valid_coordinates(board,x,y+1) and board[x][y+1]!='X'):
-        print('move after hit: ', x,y+1,' -----------', board[x][y+1])
-        board[x][y+1] = 'X'
-        if(check_if_hit(board, x, y+1)):
-            hit_positions.append([x, y+1])
-        return
+    if check_valid_coordinates(board,x,y+1):
+        if board[x][y+1]!='X':
+            print('move after hit: ', x,y+1,' -----------', board[x][y+1])
+            board[x][y+1] = 'X'
+            if(check_if_hit(board, x, y+1)):
+                hit_positions.append([x, y+1])
+            return
 
-    if(check_valid_coordinates(board,x+1,y) and board[x+1][y]!='X'):
-        print('move after hit: ', x+1,y,' -----------', board[x+1][y])
-        board[x+1][y] = 'X'
-        if(check_if_hit(board, x+1, y)):
-            hit_positions.append([x+1, y])
-        return
+    if check_valid_coordinates(board,x+1,y):
+        if board[x+1][y]!='X':
+            print('move after hit: ', x+1,y,' -----------', board[x+1][y])
+            board[x+1][y] = 'X'
+            if(check_if_hit(board, x+1, y)):
+                hit_positions.append([x+1, y])
+            return
 
     # if there is no hit, pop from stack
     print('guess     --- hit_positions: ', hit_positions)
@@ -79,7 +83,7 @@ def guess_along_hit(board):
 
 
 def check_valid_coordinates(board,x,y):
-    if(x >= 0 & x <= len(board) & y >= 0 & y <= len(board)):
+    if(x >= 0 and x < len(board) and y >= 0 and y < len(board)):
         return True
     return False
 
