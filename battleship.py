@@ -28,7 +28,8 @@ def play_solo(no_of_plays=1):
         random_moves.append( random_algo.play(baord) )
         hunt_moves.append( hunt_algo.play(baord) )
         # prob
-        # deep r
+    # deep r
+    deep_moves.append( deep_reinforcement.play(board), no_of_plays )
 
     print ('average moves for each algo to win: ')
     print('random: ', statistics.mean(random_moves))
@@ -59,10 +60,20 @@ def play(type_of_game='solo', num_of_games_each=1):
 
 
 
-def test_play():
-    print('starting test play...')
-    board = utils.get_board(type='random_ships', size=10)
-    m = hunt_algo.play(board)
+
+
+def test_hunt():
+    board = utils.get_board('random_ships')
+    m = hunt_algo.play( board )
+    print('hunt moves: ', m)
+
+def test_rl():
+    print('starting deep_r test play...')
+
+    board = utils.get_board(type='one_ship', size=5)
+    pprint.pprint(board)
+    m = deep_reinforcement.play( board, 1000 )
+
     print("moves: ", m)
 
 
@@ -74,32 +85,7 @@ def test_play():
 
 
 def main():
-    test_play()
-
+    test_hunt()
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-# random
-
-# hunt algorithm
-    # explore nearby after hit
-
-# probability density function / heatmap
-    # https://cliambrown.com/battleship/methodology.php#options
-
-# deep reinforcement learning
-    # https://www.efavdb.com/battleship
-
-
-
-# https://paulvanderlaken.com/2019/01/21/beating-battleships-with-algorithms-and-ai/

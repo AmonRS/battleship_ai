@@ -1,0 +1,15 @@
+
+# random
+
+# hunt algorithm
+    # explore nearby after hit
+
+# probability density function / heatmap
+    # https://cliambrown.com/battleship/methodology.php#options
+
+# deep reinforcement learning
+    # https://www.efavdb.com/battleship
+
+
+
+# https://paulvanderlaken.com/2019/01/21/beating-battleships-with-algorithms-and-ai/
