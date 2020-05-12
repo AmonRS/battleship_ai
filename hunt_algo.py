@@ -7,7 +7,9 @@ hit_positions = []
 def make_move(board):
     print("make move ()")
     print('hit_positions: ', hit_positions)
+
     size = len(board)
+
     # make random move if the stack is empty
     if not hit_positions:
         while True:
@@ -16,7 +18,7 @@ def make_move(board):
 
             if board[x][y] in ['~']:
                 print('random move: ', x, y, '-----', board[x][y])
-                board[x][y] = 'X'
+                board[x][y] = '0'
                 # dont change the hit flag even if the guessed position is not a ship
                 break
                 
@@ -25,13 +27,16 @@ def make_move(board):
                 board[x][y] = 'X'
                 hit_positions.append([x,y])
                 break
+
     else:
         guess_along_hit(board)
 
 
 def guess_along_hit(board):
+
     x = hit_positions[-1][0]
     y = hit_positions[-1][1]
+
     print("guess along hit () - ",x,' - ',y)
     utils.display_board(board)
 
@@ -66,7 +71,9 @@ def guess_along_hit(board):
         return
 
     # if there is no hit, pop from stack
-    hit_positions.pop
+    print('guess     --- hit_positions: ', hit_positions)
+    hit_positions.pop()
+    print('guess pop --- hit_positions: ', hit_positions)
         
     
 
@@ -87,7 +94,6 @@ def check_if_hit(board, x, y):
 
 
 
-# copied this code from the file "random_algo.py"
 def play(board):
     moves = 0
 
@@ -100,6 +106,6 @@ def play(board):
         if utils.check_if_won(board):
             break
 
-    # print('random play done')
+    # print('hunt play done')
     utils.display_board(board)
     return moves
