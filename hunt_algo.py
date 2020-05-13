@@ -8,15 +8,11 @@ def make_move(board):
     print("make move ()")
     print('hit_positions: ', hit_positions)
 
-    size = len(board)
-
     # make random move if the stack is empty
     if not hit_positions:
-        tf = make_random_move(board)
-        return tf
+        make_random_move(board)
     else:
-        tf = guess_along_hit(board)
-        return tf
+        guess_along_hit(board)
 
 
 def make_random_move(board):
@@ -28,7 +24,7 @@ def make_random_move(board):
 
         if board[x][y] in ['~']:
             print('random move: ', x, y, '-----', board[x][y])
-            board[x][y] = 'X'
+            board[x][y] = '0'
             # dont change the hit flag even if the guessed position is not a ship
             break
             
@@ -37,57 +33,55 @@ def make_random_move(board):
             board[x][y] = 'X'
             hit_positions.append([x,y])
             break
-    
-    return True
 
 
-def guess_along_hit(board):
+def guess_along_hit(board, hit_positions = hit_positions):
     x = hit_positions[-1][0]
     y = hit_positions[-1][1]
     print(x, y)
 
 
     # also check if the coordinates are valid
-    if check_valid_coordinates(board,x,y-1):
-        if board[x][y-1]!='X':
-            print('move after hit: ', x,y-1,' -----------', board[x][y-1])
-            
-            if(check_if_hit(board, x, y-1)):
-                hit_positions.append([x, y-1])
+    if(check_valid_coordinates(board,x,y-1) and not board[x][y-1] in ['X','0']):
+        print('move after hit: ', x,y-1,' -----------', board[x][y-1])
+        
+        if(check_if_hit(board, x, y-1)):
+            hit_positions.append([x, y-1])
             board[x][y-1] = 'X'
-            return True
+            return
+        board[x][y-1] = '0'
+        return
 
-    if check_valid_coordinates(board,x-1,y):
-        if board[x-1][y]!='X':
-            print('move after hit: ', x-1,y,' -----------', board[x-1][y])
-            if(check_if_hit(board, x-1, y)):
-                hit_positions.append([x-1, y])
+    if(check_valid_coordinates(board,x-1,y) and not board[x-1][y] in ['X','0']):
+        print('move after hit: ', x-1,y,' -----------', board[x-1][y])
+        if(check_if_hit(board, x-1, y)):
+            hit_positions.append([x-1, y])
             board[x-1][y] = 'X'
-            return True
+            return
+        board[x-1][y] = '0'
+        return
 
-    if check_valid_coordinates(board,x,y+1):
-        if board[x][y+1]!='X':
-            print('move after hit: ', x,y+1,' -----------', board[x][y+1])
-            if(check_if_hit(board, x, y+1)):
-                hit_positions.append([x, y+1])
+    if(check_valid_coordinates(board,x,y+1) and not board[x][y+1] in ['X','0']):
+        print('move after hit: ', x,y+1,' -----------', board[x][y+1])
+        if(check_if_hit(board, x, y+1)):
+            hit_positions.append([x, y+1])
             board[x][y+1] = 'X'
-            return True
+            return
+        board[x][y+1] = '0'
+        return
 
-    if check_valid_coordinates(board,x+1,y):
-        if board[x+1][y]!='X':
-            print('move after hit: ', x+1,y,' -----------', board[x+1][y])
-            if(check_if_hit(board, x+1, y)):
-                hit_positions.append([x+1, y])
+    if(check_valid_coordinates(board,x+1,y) and not board[x+1][y] in ['X','0']):
+        print('move after hit: ', x+1,y,' -----------', board[x+1][y])
+        if(check_if_hit(board, x+1, y)):
+            hit_positions.append([x+1, y])
             board[x+1][y] = 'X'
-            return True
-    
+            return
+        board[x+1][y] = '0'
+        return
 
     # if there is no hit, pop from stack
-    print(hit_positions)
     hit_positions.pop()
-    print(hit_positions)
-
-    return False
+    make_move(board)            # when there is no valid moves around the current hit_position, restart making move
         
     
 
@@ -112,9 +106,8 @@ def play(board):
     moves = 0
 
     while True:
-        tf = make_move(board)
-        if tf:
-            moves += 1
+        make_move(board)
+        moves += 1
         print('moves: ',moves)
         # utils.display_board(board)
 
