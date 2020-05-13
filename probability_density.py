@@ -1,5 +1,6 @@
 import random
 import utils
+import copy
 
 # This algorithm solely looks at the probability density function
 # Even after it gets a hit, it still follows the function insteaed of looking for the surrounding squares
@@ -94,26 +95,32 @@ def prepare_to_make_move(board):
 
     # generate a 1000, for a board of 10*10, (the more the better) positions of the ships, using the possibility list
     for i in range (pow(len(board),3)):
-        # IF THE ALGORITHM IS TOO SLOW, LET THE INVALID POSITIONS COUNT AS THE UNIVERSAL SPACE
-        # RIGHT NOW, IT LOOKS FOR 1000 VALID POSITIONS
-        # WHEN MADE FASTER, IT WILL LOOK 1000 POSITIONS (NO MATTER VALID OR NOT)
-        while(True):                                           # loop 1
-            predicted_ships_locations = []                      # empty the prediction list at the beginning of making a set of random ship positions
-            for ship in range(len(remaining_ships)):
-                predicted_ships_locations.append([])
-                while(True):                                    # loop 2
-                    # if this is not the first time in the loop, this array might have invalid locations
-                    predicted_ships_locations.pop()
-                    predicted_ships_locations.append([])
+        # # IF THE ALGORITHM IS TOO SLOW, LET THE INVALID POSITIONS COUNT AS THE UNIVERSAL SPACE
+        # # RIGHT NOW, IT LOOKS FOR 1000 VALID POSITIONS
+        # # WHEN MADE FASTER, IT WILL LOOK 1000 POSITIONS (NO MATTER VALID OR NOT)
+        # Now the algorithm looks for 1000 positions instead of 1000 valid positions
+        # while(True):                                           # loop 1
+        predicted_ships_locations = []                      # empty the prediction list at the beginning of making a set of random ship positions
+        valid_positions = True
+        for ship in range(len(remaining_ships)):
+            # while(True):                                    # loop 2
+                
+            predicted_ships_locations.append([])
 
-                    index = random.randint(0,len(possible_locations[ship])-1)
-                    random_point = possible_locations[ship][index]
-                    orientation = random.randint(0,1)           # horizontal = 0, vertical = 1
-                    if(generate_and_check_positions(board, random_point[0], random_point[1], orientation, ship)):
-                        break                                   # break out of loop 2
-            print("got a set -- ")
-            if(check_hit_locations_predicted):
-                break                                           # break out of loop 1
+            index = random.randint(0,len(possible_locations[ship])-1)
+            random_point = possible_locations[ship][index]
+            orientation = random.randint(0,1)           # horizontal = 0, vertical = 1
+            if(not generate_and_check_positions(board, random_point[0], random_point[1], orientation, ship)):
+                # break                                   # break out of loop 2
+                valid_positions = False
+
+        if(not valid_positions):
+            continue
+
+        # print("got a set -- ")
+        if(not check_hit_locations_predicted):
+            # break                                           # break out of loop 1
+            continue
         
         # now the positions stored in predicted_ships_locations are used to fill the probability board
         for ship_positions in predicted_ships_locations:
@@ -174,7 +181,7 @@ def generate_and_check_positions(board, x, y, orientation, ship):
                 dir = -1
     return True
 
-# Truw means start the loop again
+# True means start the loop again
 def present_in_predicted(given_point):
     for ship_positions in predicted_ships_locations:
         if given_point in ship_positions:

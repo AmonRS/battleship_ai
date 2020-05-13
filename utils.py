@@ -103,7 +103,7 @@ def get_floating_ships(board):
     break_out = False
     for i in range(size):
         for j in range(size):            
-            if not board[i][j] in ['2']:
+            if board[i][j] in ['2']:
                 ships_floating.append(2)
                 break_out = True
                 break
@@ -113,7 +113,7 @@ def get_floating_ships(board):
     break_out = False
     for i in range(size):
         for j in range(size):            
-            if not board[i][j] in ['3']:
+            if board[i][j] in ['3']:
                 ships_floating.append(3)
                 break_out = True
                 break
@@ -123,7 +123,7 @@ def get_floating_ships(board):
     break_out = False
     for i in range(size):
         for j in range(size):
-            if not board[i][j] in ['4']:
+            if board[i][j] in ['4']:
                 ships_floating.append(4)
                 break_out = True
                 break
@@ -133,7 +133,7 @@ def get_floating_ships(board):
     break_out = False
     for i in range(size):
         for j in range(size):
-            if not board[i][j] in ['5']:
+            if board[i][j] in ['5']:
                 ships_floating.append(5)
                 break_out = True
                 break
