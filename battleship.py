@@ -16,30 +16,30 @@ import rl
 
 
 
-def play_solo(no_of_plays=1):
+# def play_solo(no_of_plays=1):
     
-    random_moves = []
-    hunt_moves = []
-    prob_moves = []
-    deep_moves = []
+#     random_moves = []
+#     hunt_moves = []
+#     prob_moves = []
+#     deep_moves = []
 
-    for i in range(no_of_plays):
+#     for i in range(no_of_plays):
 
-        board = utils.get_board('random_ships')
+#         board = utils.get_board('random_ships')
 
-        random_moves.append( random_algo.play( copy.deepcopy(board) ) )
-        hunt_moves.append( hunt_algo.play( copy.deepcopy(board) ) )
-        # prob
-    # deep r
-    # deep_moves.append( deep_reinforcement.play(board), no_of_plays )
-    rl_moves = rl.play(no_of_plays)
+#         random_moves.append( random_algo.play( copy.deepcopy(board) ) )
+#         hunt_moves.append( hunt_algo.play( copy.deepcopy(board) ) )
+#         # prob
+#     # deep r
+#     # deep_moves.append( deep_reinforcement.play(board), no_of_plays )
+#     rl_moves = rl.play(no_of_plays)
 
-    print ('average moves for each algo to win: ')
-    print('random: ', statistics.mean(random_moves), '---', random_moves)
-    print('hunt: ', statistics.mean(hunt_moves), '---', hunt_moves)
-    # print('prob: ', statistics.mean(prob_moves))
-    # print('deep: ', statistics.mean(deep_moves))
-    print('RL: ', statistics.mean(rl_moves), '---', rl_moves)
+#     print ('average moves for each algo to win: ')
+#     print('random: ', statistics.mean(random_moves), '---', random_moves)
+#     print('hunt: ', statistics.mean(hunt_moves), '---', hunt_moves)
+#     # print('prob: ', statistics.mean(prob_moves))
+#     # print('deep: ', statistics.mean(deep_moves))
+#     print('RL: ', statistics.mean(rl_moves), '---', rl_moves)
 
 
 
@@ -70,16 +70,19 @@ def test_rl():
     print('rl testing done ...')
 
 
-
-
+def test_prob():
+    board = utils.get_board('random_ships')
+    m = probability_density.play(board)
+    print('total moves: ', m)
 
 
 
 
 
 def main():
-    play_solo(30)
+    # play_solo(30)
     # test_rl()
+    test_prob()
 
 
 if __name__ == '__main__':

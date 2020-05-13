@@ -86,21 +86,58 @@ def check_if_won(board):
 
 
 # feedback for the algorithms to know how many ships are sunk
-def get_sunk_ships(board):
-    ships_sunk = []
-
+def get_floating_ships(board):
+    ships_floating = []
     size = len(board)
+    
+    break_out = False
     for i in range(size):
         for j in range(size):
-            if not board[i][j] in ['1']:
-                ships_sunk.append(1)
+            if board[i][j] in ['1']:
+                ships_floating.append(1)
+                break_out = True
+                break
+        if(break_out):
+            break
+
+    break_out = False
+    for i in range(size):
+        for j in range(size):            
             if not board[i][j] in ['2']:
-                ships_sunk.append(2)
+                ships_floating.append(2)
+                break_out = True
+                break
+        if(break_out):
+            break
+
+    break_out = False
+    for i in range(size):
+        for j in range(size):            
             if not board[i][j] in ['3']:
-                ships_sunk.append(3)
+                ships_floating.append(3)
+                break_out = True
+                break
+        if(break_out):
+            break
+
+    break_out = False
+    for i in range(size):
+        for j in range(size):
             if not board[i][j] in ['4']:
-                ships_sunk.append(4)
-            if not board[i][j] in ['5']:
-                ships_sunk.append(5)
+                ships_floating.append(4)
+                break_out = True
+                break
+        if(break_out):
+            break
     
-    return ships_sunk
+    break_out = False
+    for i in range(size):
+        for j in range(size):
+            if not board[i][j] in ['5']:
+                ships_floating.append(5)
+                break_out = True
+                break
+        if(break_out):
+            break
+    
+    return ships_floating
