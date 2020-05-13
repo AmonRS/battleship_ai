@@ -10,6 +10,7 @@ import random_algo
 import hunt_algo
 import probability_density
 import deep_reinforcement
+import rl
 
 
 
@@ -31,12 +32,14 @@ def play_solo(no_of_plays=1):
         # prob
     # deep r
     # deep_moves.append( deep_reinforcement.play(board), no_of_plays )
+    rl_moves = rl.play(no_of_plays)
 
     print ('average moves for each algo to win: ')
     print('random: ', statistics.mean(random_moves), '---', random_moves)
     print('hunt: ', statistics.mean(hunt_moves), '---', hunt_moves)
     # print('prob: ', statistics.mean(prob_moves))
     # print('deep: ', statistics.mean(deep_moves))
+    print('RL: ', statistics.mean(rl_moves), '---', rl_moves)
 
 
 
@@ -61,11 +64,10 @@ def test_hunt():
 def test_rl():
     print('starting deep_r test play...')
 
-    board = utils.get_board(type='one_ship', size=5)
-    pprint.pprint(board)
-    m = deep_reinforcement.play( board, 1000 )
+    rl.play(10)
 
-    print("moves: ", m)
+    # print("moves: ", m)
+    print('rl testing done ...')
 
 
 
@@ -77,6 +79,8 @@ def test_rl():
 
 def main():
     play_solo(30)
+    # test_rl()
+
 
 if __name__ == '__main__':
     main()

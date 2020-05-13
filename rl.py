@@ -9,6 +9,21 @@ from gym import spaces
 from stable_baselines.common.env_checker import check_env
 import numpy as np
 
+from stable_baselines import DQN, PPO2, A2C, ACKTR, TRPO
+from stable_baselines.bench import Monitor
+from stable_baselines.common.vec_env import DummyVecEnv
+import os
+from stable_baselines.results_plotter import load_results, ts2xy
+from tensorflow.keras.backend import clear_session #not sure if we need this but it does not hurt
+import matplotlib.pyplot as plt
+
+from stable_baselines.common.callbacks import BaseCallback
+
+
+
+
+moves = []
+
 
 
 
@@ -66,9 +81,6 @@ def board_rendering(grid_size, board):
             print(current_state, end='')
         print(' |')
     print("-"*(4*grid_size+2))
-
-
-
 
 
 
@@ -250,6 +262,137 @@ class BattleshipEnv(gym.Env):
 
 
 
+## to work with all policies. See next callback function
+
+def callback(_locals, _globals):
+    """
+    Callback called at each step (for DQN an others) or after n steps (see ACER or PPO2)
+    :param _locals: (dict)
+    :param _globals: (dict)
+    """
+    global n_steps, best_mean_reward, moves
+    # Print stats every step_interval calls
+    if (n_steps + 1) % step_interval == 0:
+        # Evaluate policy training performance
+        x, y = ts2xy(load_results(log_dir), 'timesteps')
+        if len(x) > 0:
+            # NOTE: when done is True, timesteps are counted and reported to the log_dir
+            mean_reward = np.mean(y[-episode_interval:]) # mean reward over previous episode_interval episodes
+            mean_moves = np.mean(np.diff(x[-episode_interval:])) # mean moves over previous episode_interval episodes
+            print(x[-1], 'timesteps') # closest to step_interval step number
+            print("Best mean reward: {:.2f} - Last mean reward per episode: {:.2f} - Last mean moves per episode: {:.2f}".format(best_mean_reward, 
+                                                                                           mean_reward, mean_moves))
+            moves.append( mean_moves )
+
+            # New best model, you could save the agent here
+            if mean_reward > best_mean_reward:
+                best_mean_reward = mean_reward
+                # Example for saving best model
+                print("Saving new best model")
+                _locals['self'].save(log_dir + 'best_model.pkl')
+    n_steps += 1
+    # Returning False will stop training early
+    return True
+class SaveOnBestTrainingRewardCallback(BaseCallback):
+    """
+    Callback for saving a model (the check is done every ``check_freq`` steps)
+    based on the training reward (in practice, we recommend using ``EvalCallback``).
+
+    :param check_freq: (int)
+    :param log_dir: (str) Path to the folder where the model will be saved.
+      It must contains the file created by the ``Monitor`` wrapper.
+    :param verbose: (int)
+    """
+    def __init__(self, check_freq: int, episode_interval: int, log_dir: str, verbose=1):
+        super(SaveOnBestTrainingRewardCallback, self).__init__(verbose)
+        self.check_freq = check_freq
+        self.episode_interval = episode_interval
+        self.log_dir = log_dir
+        self.save_path = os.path.join(log_dir, 'best_model.pkl')
+        self.best_mean_reward = -np.inf
+
+    def _init_callback(self) -> None:
+        # Create folder if needed
+        if self.save_path is not None:
+            os.makedirs(self.save_path, exist_ok=True)
+
+    def _on_step(self) -> bool:
+        if self.n_calls % self.check_freq == 0:
+            # Evaluate policy training performance
+            x, y = ts2xy(load_results(self.log_dir), 'timesteps')
+            if len(x) > 0:
+                # NOTE: when done is True, timesteps are counted and reported to the log_dir
+                mean_reward = np.mean(y[-self.episode_interval:]) # mean reward over previous episode_interval episodes
+                mean_moves = np.mean(np.diff(x[-self.episode_interval:])) # mean moves over previous 100 episodes
+                if self.verbose > 0:
+                    print(x[-1], 'timesteps') # closest to step_interval step number
+                    print("Best mean reward: {:.2f} - Last mean reward per episode: {:.2f} - Last mean moves per episode: {:.2f}".format(self.best_mean_reward, 
+                                                                                                   mean_reward, mean_moves))
+
+                # New best model, you could save the agent here
+                if mean_reward > self.best_mean_reward:
+                    self.best_mean_reward = mean_reward
+                    # Example for saving best model
+                    if self.verbose > 0:
+                        print("Saving new best model")
+                    self.model.save(self.save_path)
+
+        return True
+
+
+
+
+
+
+def moving_average(values, window):
+    """
+    Smooth values by doing a moving average
+    :param values: (numpy array)
+    :param window: (int)
+    :return: (numpy array)
+    """
+    weights = np.repeat(1.0, window) / window
+    return np.convolve(values, weights, 'valid')
+
+
+def plot_results(log_folder, window = 100, title='Learning Curve'):
+    """
+    plot the results
+
+    :param log_folder: (str) the save location of the results to plot
+    :param title: (str) the title of the task to plot
+    """
+    
+    x, y = ts2xy(load_results(log_folder), 'timesteps')
+    y = moving_average(y, window=window)
+    y_moves = moving_average(np.diff(x), window = window) 
+    # Truncate x
+    x = x[len(x) - len(y):]
+    x_moves = x[len(x) - len(y_moves):]
+
+    title = 'Smoothed Learning Curve of Rewards (every ' + str(window) +' steps)'
+    fig = plt.figure(title)
+    plt.plot(x, y)
+    plt.xlabel('Number of Timesteps')
+    plt.ylabel('Rewards')
+    plt.title(title)
+    plt.show()
+
+    title = 'Smoothed Learning Curve of Moves (every ' + str(window) +' steps)'
+    fig = plt.figure(title)
+    plt.plot(x_moves, y_moves)
+    plt.xlabel('Number of Timesteps')
+    plt.ylabel('Moves')
+    plt.title(title)
+    plt.show()
+
+
+
+
+
+
+
+
 
 
 # # validate environment with one ship (either random or user-defined) on 5x5 board
@@ -284,9 +427,47 @@ class BattleshipEnv(gym.Env):
 
 
 
+def test_environment():
+    # Test environment
+    # ships
+    ships = {}
+    ships['destroyer'] = 2            # [ no. , name , size]
+    ships['submarine'] = 3            # no. is used to identify ships on the board 
+    ships['cruiser'] = 3 
+    ships['battleship'] = 4 
+    ships['carrier'] = 5
 
-# Test environment
-# ships
+    grid_size=10
+
+    env = BattleshipEnv(enemy_board=None, ship_locs={}, grid_size=grid_size, ships=ships)
+
+    for ep in range(2):
+        print('Episode', ep)
+        obs = env.reset()
+        #env.render()
+        #print(env.enemy_board)
+        done = False
+        t = 0
+        while not done:
+            action = env.action_space.sample()
+            i, j = np.unravel_index(action, (grid_size,grid_size))    
+            print("Action {}".format(t + 1), i, j)
+            obs, reward, done, _ = env.step(action)
+            print('obs=', obs, 'reward=', reward, 'done=', done)
+            env.render()
+            t += 1
+            if done:
+                print("Goal reached!", "reward=", reward)
+
+
+
+
+
+
+
+# clear_session()
+
+# ships -- keep only one kind for 5x5 grid
 ships = {}
 ships['destroyer'] = 2            # [ no. , name , size]
 ships['submarine'] = 3            # no. is used to identify ships on the board 
@@ -296,25 +477,31 @@ ships['carrier'] = 5
 
 grid_size=10
 
-env = BattleshipEnv(enemy_board=None, ship_locs={}, grid_size=grid_size, ships=ships)
+num_timesteps = 50000#1000000 # this is number of moves and not number of episodes
 
-for ep in range(2):
-    print('Episode', ep)
-    obs = env.reset()
-    #env.render()
-    #print(env.enemy_board)
-    done = False
-    t = 0
-    while not done:
-        action = env.action_space.sample()
-        i, j = np.unravel_index(action, (grid_size,grid_size))    
-        print("Action {}".format(t + 1), i, j)
-        obs, reward, done, _ = env.step(action)
-        print('obs=', obs, 'reward=', reward, 'done=', done)
-        env.render()
-        t += 1
-        if done:
-            print("Goal reached!", "reward=", reward)
+best_mean_reward, n_steps, step_interval, episode_interval = -np.inf, 0, 10000, 10000
+
+log_dir = "./gym/"
+
+
+def play_this_rl_thing():
+
+    clear_session()
+
+    # Instantiate the env
+    env = BattleshipEnv(enemy_board=None, ship_locs={}, grid_size=grid_size, ships=ships)
+
+    # wrap it
+    
+    os.makedirs(log_dir, exist_ok=True)
+    env = Monitor(env, filename=log_dir, allow_early_resets=True)
+    env = DummyVecEnv([lambda: env])
+
+    # Train the agent - Note: best model is not save in Callback function for PPO2; save manually
+    model = A2C('MlpPolicy', env, verbose=0).learn(total_timesteps=num_timesteps, callback=callback)
+
+
+
 
 
 
@@ -323,4 +510,17 @@ for ep in range(2):
 
 
 def play(no_of_plays):
-    pass
+    global num_timesteps, moves
+    num_timesteps = 10000 * no_of_plays
+
+    play_this_rl_thing()
+
+    print(moves)
+    return moves
+
+
+
+
+
+# if __name__ == '__main__':
+#     play(7)
