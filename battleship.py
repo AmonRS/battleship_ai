@@ -1,5 +1,6 @@
 # battleship ai
 
+import copy
 import pprint
 import random
 import statistics
@@ -23,39 +24,29 @@ def play_solo(no_of_plays=1):
 
     for i in range(no_of_plays):
 
-        baord = utils.get_board('random_ships')
+        board = utils.get_board('random_ships')
 
-        random_moves.append( random_algo.play(baord) )
-        hunt_moves.append( hunt_algo.play(baord) )
+        random_moves.append( random_algo.play( copy.deepcopy(board) ) )
+        hunt_moves.append( hunt_algo.play( copy.deepcopy(board) ) )
         # prob
     # deep r
-    deep_moves.append( deep_reinforcement.play(board), no_of_plays )
+    # deep_moves.append( deep_reinforcement.play(board), no_of_plays )
 
     print ('average moves for each algo to win: ')
-    print('random: ', statistics.mean(random_moves))
-    print('hunt: ', statistics.mean(hunt_moves))
+    print('random: ', statistics.mean(random_moves), '---', random_moves)
+    print('hunt: ', statistics.mean(hunt_moves), '---', hunt_moves)
     # print('prob: ', statistics.mean(prob_moves))
     # print('deep: ', statistics.mean(deep_moves))
-    
 
 
 
 
-def play(type_of_game='solo', num_of_games_each=1):
+def play_tournament():
+    pass
 
-    if type_of_game == 'solo':
-        play_solo(no_of_plays=num_of_games_each)
-
-
-
-    elif type_of_game == 'tournament':
-        pass
-        # tournament style
-            # ...
-
-    elif type_of_game == 'player':
-        pass
-        # player vs. ai
+def play_ai_vs_player():
+    # lets not do this one :(
+    pass
 
 
 
@@ -85,7 +76,7 @@ def test_rl():
 
 
 def main():
-    test_hunt()
+    play_solo(30)
 
 if __name__ == '__main__':
     main()

@@ -13,3 +13,35 @@
 
 
 # https://paulvanderlaken.com/2019/01/21/beating-battleships-with-algorithms-and-ai/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I second the motion to do a lot more games per match. Doing 50 games is just flipping a coin. I needed to do 1000 games to get any reasonable distinction between test algorithms.
+Download Dreadnought 1.2.
+Strategies:
+    - keep track of all possible positions for ships that have >0 hits. The list never gets bigger than ~30K so it can be kept exactly, unlike the list of all possible positions for all ships (which is very large)
+    - The GetShot algorithm has two parts, one which generates random shots and the other which tries to finish sinking an already hit ship. We do random shots if there is a possible position (from the list above) in which all hit ships are sunk. Otherwise, we try to finish sinking a ship by picking a location to shoot at which eliminates the most possible positions (weighted).
+    - For random shots, compute best location to shoot based on the likelihood of one of the unsunk ships overlapping the location.
+    - adaptive algorithm which places ships in locations where the opponent is statistically less likely to shoot.
+    - adaptive algorithm which prefers to shoot at locations where the opponent is statistically more likely to place his ships.
+    - place ships mostly not touching each other.
