@@ -182,10 +182,6 @@ class BattleshipEnv(gym.Env):
 
     def reset(self):
         # Reset the state of the environment to an initial state
-        """
-        Important: the observation must be a numpy array
-        :return: (np.array) 
-        """
         
         self.board = self.cell['E']*np.ones((self.grid_size, self.grid_size), dtype='int')
         
@@ -208,11 +204,6 @@ class BattleshipEnv(gym.Env):
  
     def render(self, mode='human'):
         # Render the environment to the screen
-        # board (i,j)
-        ## ------------>j
-        ## | (0,0) | (0,1) | (0,2) | |
-        ## | (1,0) | (1,1) | (1,2) | |
-        ##                           v i
         for i in range(self.grid_size):
             print("-"*(4*self.grid_size+2))
             for j in range(self.grid_size):
@@ -294,15 +285,7 @@ def callback(_locals, _globals):
     # Returning False will stop training early
     return True
 class SaveOnBestTrainingRewardCallback(BaseCallback):
-    """
-    Callback for saving a model (the check is done every ``check_freq`` steps)
-    based on the training reward (in practice, we recommend using ``EvalCallback``).
-
-    :param check_freq: (int)
-    :param log_dir: (str) Path to the folder where the model will be saved.
-      It must contains the file created by the ``Monitor`` wrapper.
-    :param verbose: (int)
-    """
+   
     def __init__(self, check_freq: int, episode_interval: int, log_dir: str, verbose=1):
         super(SaveOnBestTrainingRewardCallback, self).__init__(verbose)
         self.check_freq = check_freq
@@ -345,24 +328,11 @@ class SaveOnBestTrainingRewardCallback(BaseCallback):
 
 
 def moving_average(values, window):
-    """
-    Smooth values by doing a moving average
-    :param values: (numpy array)
-    :param window: (int)
-    :return: (numpy array)
-    """
     weights = np.repeat(1.0, window) / window
     return np.convolve(values, weights, 'valid')
 
 
 def plot_results(log_folder, window = 100, title='Learning Curve'):
-    """
-    plot the results
-
-    :param log_folder: (str) the save location of the results to plot
-    :param title: (str) the title of the task to plot
-    """
-    
     x, y = ts2xy(load_results(log_folder), 'timesteps')
     y = moving_average(y, window=window)
     y_moves = moving_average(np.diff(x), window = window) 
@@ -506,9 +476,6 @@ def play_this_rl_thing():
 
 
 
-
-
-
 def play(no_of_plays):
     global num_timesteps, moves
     num_timesteps = 10000 * no_of_plays
@@ -522,5 +489,7 @@ def play(no_of_plays):
 
 
 
-# if __name__ == '__main__':
-#     play(7)
+def test_rl(no_of_plays):
+    play(no_of_plays)
+if __name__ == '__main__':
+    test_rl(7)
