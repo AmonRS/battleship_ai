@@ -1,0 +1,20 @@
+GAMES OF 5 ...
+TOURNAMENT GAME BETWEEN ALGORITHMS
+         Random vs. Hunt
+                 random:  0 wins
+                 hunt:  5 wins
+         Random vs. Probability Density
+                 random:  0 wins
+                 probability:  5 wins
+         Hunt vs. Probability Density
+                 hunt:  1 wins
+                 probability:  4 wins
+         Random vs. Reinforcement Learning
+                 random:  2 wins
+                 learning:  3 wins
+         Hunt vs. Reinforcement Learning
+                 hunt:  5 wins
+                 learning:  0 wins
+         Probability Density vs. Reinforcement Learning
+                 probability:  5 wins
+                 learning:  0 wins

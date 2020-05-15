@@ -272,3 +272,11 @@ def play(board):
     # print('hunt play done')
     utils.display_board(board)
     return moves
+
+
+
+
+
+if __name__ == '__main__':
+    m = play( utils.get_board('random_ships') )
+    print('moves: ',m)
